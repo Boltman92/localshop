@@ -4,12 +4,11 @@ import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
-
 import store, { history } from '../redux'
-
-import Home from '../components/home'
-import DummyView from '../components/dummy-view'
+import Header from '../components/header'
+import Mainpage from '../components/mainpage'
 import NotFound from '../components/404'
+import Home from '../components/home'
 
 import Startup from './startup'
 
@@ -72,9 +71,10 @@ const RootComponent = (props) => {
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <Switch>
-            <Route exact path="/" component={() => <DummyView />} />
-            <Route exact path="/dashboard" component={() => <Home />} />
-            <PrivateRoute exact path="/hidden-route" component={() => <DummyView />} />
+            <Route exact path="/" component={() => <Mainpage />} />
+            <Route exact path="/dashboard" component={() => <Header />} />
+            <Route exact path="/home" component={() => <Home />} />
+            <PrivateRoute exact path="/hidden-route" component={() => <Header />} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

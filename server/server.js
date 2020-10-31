@@ -12,6 +12,15 @@ import Html from '../client/html'
 
 const Root = () => ''
 
+const { readFile } = require('fs').promises
+
+// export default function toWriteFile() {
+//   readFile(`${__dirname}/data.json`, { encoding: 'utf8' }).then((text) => {
+//     writeFile(`${__dirname}/data.json`, text, { encoding: 'utf8' })
+//     return text
+//   })
+// }
+
 try {
   // eslint-disable-next-line import/no-unresolved
   // ;(async () => {
@@ -41,8 +50,11 @@ const middleware = [
 
 middleware.forEach((it) => server.use(it))
 
-server.get('/api/v1/users', (req, res) => {
-  res.send('привет привет')
+server.get('/api/itemslist', (req, res) => {
+  readFile(`${__dirname}/data.json`, { encoding: 'utf8' }).then((text) => {
+    //  writeFile(`${__dirname}/data.json`, text, { encoding: 'utf8' })
+    res.send(text)
+  })
 })
 
 server.use('/api/', (req, res) => {
