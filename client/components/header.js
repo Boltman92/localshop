@@ -1,21 +1,50 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Head from './head'
 import { getCurrencyData } from '../redux/reducers/currency'
-// import { updateCurrencyValueUSD, updateCurrencyValueCAD } from '../redux/reducers/items'
+import { updateSortMethode } from '../redux/reducers/sort'
 
 const Header = () => {
-  // const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
-  // const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
+  const basketList = useSelector((s) => s.items.basketList)
+  const currencyValue = useSelector((s) => s.currency.value)
+  const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
+  const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
 
   const [currency, setCurrency] = useState('EUR')
-
+  const [sortMethode, setSortMethode] = useState('none')
   const dispatch = useDispatch()
+
+  const CAD = 'CAD'
+  const USD = 'USD'
+  const EUR = 'EUR'
+
+  const total = basketList.reduce((acc, rec) => acc + rec.price, 0)
 
   useEffect(() => {
     dispatch(getCurrencyData(currency))
   }, [currency])
+
+  useEffect(() => {
+    dispatch(updateSortMethode(sortMethode))
+  }, [sortMethode])
+
+  const [price, setPrice] = useState(1)
+
+  function updateCurrencyValue() {
+    if (currencyValue === USD) {
+      setPrice(currencyValueUSD)
+    } else if (currencyValue === CAD) {
+      setPrice(currencyValueCAD)
+    } else if (currencyValue === EUR) {
+      setPrice(1)
+    }
+    return price
+  }
+
+  useEffect(() => {
+    updateCurrencyValue()
+  }, [currencyValue])
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-blue-700 p-6">
@@ -46,6 +75,7 @@ const Header = () => {
             id="#sort-price"
             type="button"
             className="block mt-4 lg:inline-block lg:mt-0 text-white  mr-3"
+            onClick={() => setSortMethode('Price')}
           >
             Цене
           </button>
@@ -54,6 +84,7 @@ const Header = () => {
             id="#sort-name"
             type="button"
             className="block mt-4 lg:inline-block lg:mt-0 text-white  mr-3"
+            onClick={() => setSortMethode('Title')}
           >
             Названию
           </button>
@@ -89,9 +120,13 @@ const Header = () => {
 
       <div className="mr-10">
         <Link id="order-count" to="/">
-          <div className="text-white pr-10 hover:text-red-600">Товаров в корзине —</div>
+          <div className="text-white pr-10 hover:text-red-600">
+            Товаров в корзине — {basketList.length}
+          </div>
         </Link>
-        <div className="text-white">Итого:</div>
+        <div className="text-white">
+          Итого: {(total * price).toFixed(2)} {currency}
+        </div>
       </div>
     </nav>
   )

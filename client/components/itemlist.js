@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  getItemsData
-  // updateCurrencyValueUSD,
-  // updateCurrencyValueCAD
-} from '../redux/reducers/items'
+import { getItemsData, updateBasket } from '../redux/reducers/items'
 
 const Itemlist = () => {
   const itemList = useSelector((s) => s.items.list)
   const currencyValue = useSelector((s) => s.currency.value)
   const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
   const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
+  const sortMethode = useSelector((s) => s.sort.sortMethode)
   const dispatch = useDispatch()
 
   const CAD = 'CAD'
@@ -22,6 +19,38 @@ const Itemlist = () => {
   useEffect(() => {
     dispatch(getItemsData())
   }, [])
+
+  const [items, setItems] = useState(itemList)
+
+  function sort() {
+    if (sortMethode === 'Price') {
+      return [
+        ...itemList.sort(function (a, b) {
+          return a.price - b.price
+        })
+      ]
+    }
+    return [
+      ...itemList.sort(function (a, b) {
+        const x = a.title.toLowerCase()
+        const y = b.title.toLowerCase()
+        if (x < y) {
+          return -1
+        }
+        if (x > y) {
+          return 1
+        }
+        return 0
+      })
+    ]
+  }
+  useEffect(() => {
+    setItems(itemList)
+  }, [itemList])
+
+  useEffect(() => {
+    setItems(sort())
+  }, [sortMethode])
 
   function updateCurrencyValue() {
     if (currencyValue === USD) {
@@ -38,14 +67,21 @@ const Itemlist = () => {
     updateCurrencyValue()
   }, [currencyValue])
 
+  function addToBasket(item) {
+    dispatch(updateBasket(item))
+    // alert(JSON.stringify(item))
+  }
+
   return (
     <div className="flex flex-wrap justify-center bg-blue-100">
-      {itemList.map((item) => {
+      {items.map((item) => {
         return (
           <div key="key" className="bg-blue-100 pt-10 flex flex-wrap justify-center ">
             <div className="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden mb-10 ml-5">
               <div className="px-4 py-2 ">
-                <h1 className="text-gray-900 font-bold text-sm uppercase ">{item.title}</h1>
+                <h1 className="text-gray-900 font-bold text-sm uppercase ">
+                  {item.title}
+                </h1>
                 <p className="text-gray-600 text-sm mt-1">{item.description}</p>
               </div>
               <img
@@ -60,6 +96,7 @@ const Itemlist = () => {
                 <button
                   type="button"
                   className="px-3 py-1 bg-gray-200 text-sm text-gray-900 font-semibold rounded"
+                  onClick={() => addToBasket(item)}
                 >
                   Добавить в корзину
                 </button>
