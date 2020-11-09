@@ -7,7 +7,6 @@ import { updateSortMethode } from '../redux/reducers/sort'
 
 const Header = () => {
   const basketList = useSelector((s) => s.items.basketList)
-  const currencyValue = useSelector((s) => s.currency.value)
   const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
   const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
 
@@ -32,11 +31,11 @@ const Header = () => {
   const [price, setPrice] = useState(1)
 
   function updateCurrencyValue() {
-    if (currencyValue === USD) {
+    if (currency === USD) {
       setPrice(currencyValueUSD)
-    } else if (currencyValue === CAD) {
+    } else if (currency === CAD) {
       setPrice(currencyValueCAD)
-    } else if (currencyValue === EUR) {
+    } else if (currency === EUR) {
       setPrice(1)
     }
     return price
@@ -44,7 +43,7 @@ const Header = () => {
 
   useEffect(() => {
     updateCurrencyValue()
-  }, [currencyValue])
+  }, [currency])
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-blue-700 p-6">
@@ -119,7 +118,7 @@ const Header = () => {
       </div>
 
       <div className="mr-10">
-        <Link id="order-count" to="/">
+        <Link id="order-count" to="/basket">
           <div className="text-white pr-10 hover:text-red-600">
             Товаров в корзине — {basketList.length}
           </div>
