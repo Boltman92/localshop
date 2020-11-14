@@ -8,7 +8,7 @@ const Itemlist = () => {
   const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
   const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
   const sortMethode = useSelector((s) => s.sort.sortMethode)
-
+  const basketList = useSelector((s) => s.items.basketList)
   const dispatch = useDispatch()
 
   const CAD = 'CAD'
@@ -16,12 +16,11 @@ const Itemlist = () => {
   const EUR = 'EUR'
 
   const [price, setPrice] = useState(1)
+  const [items, setItems] = useState(itemList)
 
   useEffect(() => {
     dispatch(getItemsData())
   }, [])
-
-  const [items, setItems] = useState(itemList)
 
   function sort() {
     if (sortMethode === 'Price') {
@@ -45,9 +44,18 @@ const Itemlist = () => {
       })
     ]
   }
+
+  // useEffect(() => {
+  //   setItems(sort())
+  // }, [])
+
   useEffect(() => {
     setItems(itemList)
   }, [itemList])
+
+  useEffect(() => {
+    setItems(sort())
+  }, [])
 
   useEffect(() => {
     setItems(sort())
@@ -68,25 +76,15 @@ const Itemlist = () => {
     updateCurrencyValue()
   }, [currencyValue])
 
-  // let quantity
-  const basketList = useSelector((s) => s.items.basketList)
-
   function addToBasket(item) {
     dispatch(updateBasket(item))
-    // quantity = basketList.filter((el) => el === item).length
-    // alert(quantity)
   }
-
-  // function test(item) {
-  //   quantity = basketList.filter((el) => el === item).length
-  //   alert(quantity)
-  // }
 
   return (
     <div className="flex flex-wrap justify-center bg-blue-100">
       {items.map((item) => {
         return (
-          <div key="key" className="bg-blue-100 pt-10 flex flex-wrap justify-center ">
+          <div key={item.id} className="bg-blue-100 pt-10 flex flex-wrap justify-center ">
             <div className="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden mb-10 ml-5">
               <div className="px-4 py-2  ">
                 <h1 className="text-gray-900 font-bold text-sm uppercase ">{item.title}</h1>
@@ -106,7 +104,10 @@ const Itemlist = () => {
                   className="px-3 py-1 bg-gray-200 text-sm text-gray-900 font-semibold rounded"
                   onClick={() => addToBasket(item)}
                 >
-                  Добавить в корзину {basketList.filter((el) => el === item).length === 0 ? '' : basketList.filter((el) => el === item).length}
+                  Добавить в корзину{' '}
+                  {basketList.filter((el) => el === item).length === 0
+                    ? ''
+                    : basketList.filter((el) => el === item).length}
                 </button>
               </div>
             </div>

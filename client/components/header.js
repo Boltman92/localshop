@@ -9,9 +9,12 @@ const Header = () => {
   const basketList = useSelector((s) => s.items.basketList)
   const currencyValueUSD = useSelector((s) => s.currency.valueUSD)
   const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
+  const currencyValue = useSelector((s) => s.currency.value)
+  const [currency, setCurrency] = useState(currencyValue)
+  const sortMethod = useSelector(s => s.sort.sortMethode)
+  const [sortMethode, setSortMethode] = useState(sortMethod)
 
-  const [currency, setCurrency] = useState('EUR')
-  const [sortMethode, setSortMethode] = useState('none')
+
   const dispatch = useDispatch()
 
   const CAD = 'CAD'

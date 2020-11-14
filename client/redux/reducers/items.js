@@ -2,6 +2,8 @@ import axios from 'axios'
 
 const GETIMESLIST = 'GETIMESLIST'
 const UPDATEBASKET = 'UPDATEBASKET'
+const REMOVEBASKETITEM = 'REMOVEBASKETITEM'
+const REMOVEBASKETITEMS = 'REMOVEBASKETITEMS'
 
 const initialState = {
   list: [],
@@ -22,6 +24,25 @@ export default (state = initialState, action) => {
         basketList: [...state.basketList, ...action.item]
       }
     }
+    case REMOVEBASKETITEM: {
+      if (state.basketList.filter((e) => e === action.item).length !== 0) {
+        state.basketList.splice(
+          state.basketList.findIndex((e) => e.id === action.item.id),
+          1
+        )
+      }
+      return {
+        ...state,
+        basketList: [...state.basketList]
+      }
+    }
+    case REMOVEBASKETITEMS: {
+      // state.basketList.filter((e) => e !== action.item)
+      return {
+        ...state,
+        basketList: [...state.basketList.filter((e) => e !== action.item)]
+      }
+    }
     default:
       return state
   }
@@ -40,5 +61,17 @@ export function getItemsData() {
 export function updateBasket(item) {
   return (dispatch) => {
     dispatch({ type: UPDATEBASKET, item })
+  }
+}
+
+export function removeBasketItem(item) {
+  return (dispatch) => {
+    dispatch({ type: REMOVEBASKETITEM, item })
+  }
+}
+
+export function removeBasketItems(item) {
+  return (dispatch) => {
+    dispatch({ type: REMOVEBASKETITEMS, item })
   }
 }
