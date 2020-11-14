@@ -19,7 +19,9 @@ const Itemlist = () => {
   const [items, setItems] = useState(itemList)
 
   useEffect(() => {
-    dispatch(getItemsData())
+    if (itemList.length === 0) {
+      dispatch(getItemsData())
+    }
   }, [])
 
   function sort() {
@@ -54,11 +56,15 @@ const Itemlist = () => {
   }, [itemList])
 
   useEffect(() => {
-    setItems(sort())
+    if (itemList.length === 0) {
+      setItems(sort())
+    }
   }, [])
 
   useEffect(() => {
-    setItems(sort())
+    if (sortMethode !== 'none') {
+      setItems(sort())
+    }
   }, [sortMethode])
 
   function updateCurrencyValue() {

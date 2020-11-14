@@ -28,7 +28,10 @@ const Header = () => {
   }, [currency])
 
   useEffect(() => {
+    if (sortMethode !== 'none') {
     dispatch(updateSortMethode(sortMethode))
+    }
+    // dispatch(updateSortMethode(sortMethode))
   }, [sortMethode])
 
   const [price, setPrice] = useState(1)
@@ -52,7 +55,7 @@ const Header = () => {
     <nav className="flex items-center justify-between flex-wrap bg-blue-700 p-6">
       <Head title="Shop" />
 
-      <Link id="brand-name" to="/">
+      <Link id="brand-name" to="">
         <div className="flex items-center flex-shrink-0 text-white mr-6 hover:text-red-600">
           <svg
             className="fill-current h-8 w-8 mr-2"
