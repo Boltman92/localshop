@@ -1,5 +1,7 @@
+import axios from 'axios'
 
 const UPDATESORTMETHODE = 'UPDATESORTMETHODE'
+
 
 const initialState = {
   sortMethode: 'none'
@@ -19,6 +21,16 @@ export default (state = initialState, action) => {
 }
 
 export function updateSortMethode(sort) {
+  
+  axios({
+    method: 'post',
+    url: '/api/v1/logs',
+    data: {
+      time: +new Date(),
+      action: `sort by ${sort} methode`
+    }
+  }).catch((err) => console.log(err))
+
   return (dispatch) => {
     dispatch({ type: UPDATESORTMETHODE, sort })
   }

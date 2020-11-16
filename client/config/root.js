@@ -10,6 +10,7 @@ import Mainpage from '../components/mainpage'
 import NotFound from '../components/404'
 import Home from '../components/home'
 import Basket from '../components/basket'
+import Logs from '../components/logs'
 
 import Startup from './startup'
 
@@ -76,6 +77,7 @@ const RootComponent = (props) => {
             <Route exact path="/dashboard" component={() => <Header />} />
             <Route exact path="/home" component={() => <Home />} />
             <Route exact path="/basket" component={() => <Basket />} />
+            <Route exact path="/logs" component={() => <Logs />} />
             <PrivateRoute exact path="/hidden-route" component={() => <Header />} />
             <Route component={() => <NotFound />} />
           </Switch>

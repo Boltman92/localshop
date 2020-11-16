@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 import Head from './head'
 import { getCurrencyData } from '../redux/reducers/currency'
 import { updateSortMethode } from '../redux/reducers/sort'
@@ -11,9 +12,8 @@ const Header = () => {
   const currencyValueCAD = useSelector((s) => s.currency.valueCAD)
   const currencyValue = useSelector((s) => s.currency.value)
   const [currency, setCurrency] = useState(currencyValue)
-  const sortMethod = useSelector(s => s.sort.sortMethode)
+  const sortMethod = useSelector((s) => s.sort.sortMethode)
   const [sortMethode, setSortMethode] = useState(sortMethod)
-
 
   const dispatch = useDispatch()
 
@@ -24,12 +24,23 @@ const Header = () => {
   const total = basketList.reduce((acc, rec) => acc + rec.price, 0)
 
   useEffect(() => {
+    axios({
+      method: 'post',
+      url: '/api/v1/logs',
+      data: {
+        time: +new Date(),
+        action: `navigate to ${window.location.pathname} page`
+      }
+    }).catch((err) => console.log(err))
+  }, [])
+
+  useEffect(() => {
     dispatch(getCurrencyData(currency))
   }, [currency])
 
   useEffect(() => {
     if (sortMethode !== 'none') {
-    dispatch(updateSortMethode(sortMethode))
+      dispatch(updateSortMethode(sortMethode))
     }
     // dispatch(updateSortMethode(sortMethode))
   }, [sortMethode])

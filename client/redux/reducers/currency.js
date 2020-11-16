@@ -22,7 +22,9 @@ export default (state = initialState, action) => {
 }
 
 export function getCurrencyData(currencyValue) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const store = getState()
+    const { value: oldValue } = store.currency
     axios('https://api.exchangeratesapi.io/latest')
       .then((response) => {
         dispatch({
@@ -33,5 +35,16 @@ export function getCurrencyData(currencyValue) {
         })
       })
       .catch(() => console.log('Что-то пошло не так'))
+
+    if (oldValue !== currencyValue) {
+      axios({
+        method: 'post',
+        url: '/api/v1/logs',
+        data: {
+          time: +new Date(),
+          action: `change currency from ${oldValue} to ${currencyValue}`
+        }
+      }).catch((err) => console.log(err))
+    }
   }
 }

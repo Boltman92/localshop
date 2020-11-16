@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateBasket, removeBasketItem, removeBasketItems } from '../redux/reducers/items'
 import Head from './head'
 import Header from './header'
+import Footer from './footer'
 
 const Basket = () => {
   const dispatch = useDispatch()
@@ -260,6 +261,7 @@ const Basket = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   )
 }

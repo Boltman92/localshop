@@ -61,16 +61,45 @@ export function getItemsData() {
 export function updateBasket(item) {
   return (dispatch) => {
     dispatch({ type: UPDATEBASKET, item })
+
+    axios({
+      method: 'post',
+      url: '/api/v1/logs',
+      data: {
+        time: +new Date(),
+        action: `add ${item.title} to the backet`
+      }
+    }).catch((err) => console.log(err))
   }
 }
 
 export function removeBasketItem(item) {
+
+  axios({
+    method: 'post',
+    url: '/api/v1/logs',
+    data: {
+      time: +new Date(),
+      action: `remove  one ${item.title} from the backet`
+    }
+  }).catch((err) => console.log(err))
+
   return (dispatch) => {
     dispatch({ type: REMOVEBASKETITEM, item })
   }
 }
 
 export function removeBasketItems(item) {
+  
+  axios({
+    method: 'post',
+    url: '/api/v1/logs',
+    data: {
+      time: +new Date(),
+      action: `remove  all ${item.title} from the backet`
+    }
+  }).catch((err) => console.log(err))
+
   return (dispatch) => {
     dispatch({ type: REMOVEBASKETITEMS, item })
   }

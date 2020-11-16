@@ -10,9 +10,22 @@ import cookieParser from 'cookie-parser'
 import config from './config'
 import Html from '../client/html'
 
-const Root = () => ''
+const { readFile, writeFile, unlink } = require('fs').promises
 
-const { readFile } = require('fs').promises
+const getLogs = () => {
+  return readFile(`${__dirname}/logs.json`, { encoding: 'utf8' })
+    .then((data) => JSON.parse(data))
+    .catch(async () => {
+      await writeFile(`${__dirname}/logs.json`, '[]', { encoding: 'utf8' })
+      return []
+    })
+}
+
+const setLogs = (logs = [], body = {}) => {
+  writeFile(`${__dirname}/logs.json`, JSON.stringify([body, ...logs]), { encoding: 'utf8' })
+}
+
+const Root = () => ''
 
 // export default function toWriteFile() {
 //   readFile(`${__dirname}/data.json`, { encoding: 'utf8' }).then((text) => {
@@ -55,6 +68,23 @@ server.get('/api/itemslist', (req, res) => {
     //  writeFile(`${__dirname}/data.json`, text, { encoding: 'utf8' })
     res.send(text)
   })
+})
+
+server.get('/api/v1/logs', async (req, res) => {
+  const logs = await getLogs()
+  res.json(logs)
+})
+
+server.post('/api/v1/logs', async (req, res) => {
+  const logs = await getLogs()
+  await setLogs(logs, req.body)
+  // res.json(req.body)
+  res.send('logs successfully updated')
+})
+
+server.delete('/api/v1/logs',async (req, res) => {
+  unlink(`${__dirname}/logs.json`)
+  res.send('logs successfully removed')
 })
 
 server.use('/api/', (req, res) => {
